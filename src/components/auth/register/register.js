@@ -8,6 +8,7 @@ const Register = ({ onRegister }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+	const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleRegister = async () => {
@@ -17,6 +18,8 @@ const Register = ({ onRegister }) => {
         return;
       }
 
+			setLoading(true);
+      setError('');
       const response = await axios.post(`${BASE_URL}/register`, {
         username,
         password,
@@ -31,7 +34,9 @@ const Register = ({ onRegister }) => {
     }catch (error) {
       setError('Registration failed. Please check your information.');
       console.error(error);
-    }
+    }finally{
+			setLoading(false);
+		}
   };
 
   return (
@@ -74,8 +79,8 @@ const Register = ({ onRegister }) => {
         />
       </div>
       {error && <p className="register-error">{error}</p>}
-      <button onClick={handleRegister} className="register-button">
-        Register
+      <button onClick={handleRegister} className="register-button" disabled={loading}>
+				{loading ? 'Registering...' : 'Register'}
       </button>
       <div>
         <p>

@@ -7,10 +7,13 @@ import './login.scss';
 const Login = ({onLogin}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+	const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleLogin = async () => {
     try {
+			setLoading(true);
+			setError('');
       const response = await axios.post(`${BASE_URL}/login`, {
         username,
         password,
@@ -25,7 +28,9 @@ const Login = ({onLogin}) => {
     } catch (error) {
       setError('Invalid username or password');
       console.error(error);
-    }
+    } finally {
+			setLoading(false);
+		}
   };
 
   return (
@@ -56,8 +61,8 @@ const Login = ({onLogin}) => {
         />
       </div>
       {error && <p className="login-error">{error}</p>}
-      <button onClick={handleLogin} className="login-button">
-        Login
+      <button onClick={handleLogin} className="login-button" disabled={loading}>
+			{loading ? 'Logging in...' : 'Log In'}
       </button>
       <div>
         <p>
