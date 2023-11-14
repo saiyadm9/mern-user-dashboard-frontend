@@ -9,6 +9,7 @@ const Dashboard = ({ onLogOut }) => {
   const [selectedInterests, setSelectedInterests] = useState([]);
 	const [successMessage, setSuccessMessage] = useState('');
 	const [userName, setUserName] = useState('Loading...');
+	const [isSaving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [bio, setBio] = useState('');
 
@@ -27,7 +28,7 @@ const Dashboard = ({ onLogOut }) => {
         const userData = response.data;
         setSelectedProfession(userData.profession);
         setSelectedInterests(userData.interests || []);
-				setUserName(userData.username);
+				setUserName(userData.username.toUpperCase());
         setBio(userData.bio || '');
 				console.log(userData);
       } catch (error) {
@@ -59,6 +60,7 @@ const Dashboard = ({ onLogOut }) => {
 
   const handleSave = async () => {
     try {
+			setSaving(true);
       const response = await axios.put(
         `${BASE_URL}/users/${localStorage.getItem('userId')}`,
         {
@@ -72,16 +74,18 @@ const Dashboard = ({ onLogOut }) => {
           },
         }
       );
-			setSuccessMessage('Data saved successfully');
       console.log(response);
+			setSuccessMessage('\u2713 Data saved successfully');
 			setTimeout(() => {
 				setSuccessMessage('');
-			}, 3000);
+			}, 2980);
 
     } catch (error) {
       setError('Error saving data. Please try again.');
       console.error(error);
-    }
+    }finally{
+			setSaving(false);
+		}
   };
 
 	const handleDeleteAccount = async () => {
@@ -118,7 +122,7 @@ const Dashboard = ({ onLogOut }) => {
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <h2>User: {userName}</h2>
+        <h2>{userName}</h2>
         <div className="user-info-container">
           <button onClick={handleLogout} className="logout-button">
             Logout
@@ -173,9 +177,9 @@ const Dashboard = ({ onLogOut }) => {
         />
       </div>
       {error && <p className="error-message">{error}</p>}
-			{successMessage && <p className="success-message">{successMessage}</p>}
-      <button onClick={handleSave} className="save-button">
-        Save
+			{successMessage && <p className="success-animation-message">{successMessage}</p>}
+      <button onClick={handleSave} className="save-button" disabled={isSaving}>
+        {isSaving ? 'Saving...' : 'Save'}
       </button>
     </div>
   );

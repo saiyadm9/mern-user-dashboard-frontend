@@ -1,4 +1,5 @@
 .dashboard-container {
+	position: relative;
   max-width: 600px;
   margin: 20px auto;
   padding: 20px;
@@ -15,8 +16,8 @@
 
     h2 {
       margin: 0;
-      font-size: 22px;
-      color: #333;
+      font-size: 24px;
+      color: #3498db;
     }
 
     .user-info-container {
@@ -117,6 +118,45 @@
 
     &:hover {
       background-color: #2980b9;
+    }
+  }
+
+	.success-animation-message {
+		position: absolute;
+		bottom: 0px;
+		right: 20px;
+		padding: 10px;
+		background-color: #28a745; 
+		color: white;
+		border-radius: 5px;
+		animation: fadeInOut 3s ease-in-out;
+	}
+	
+	@keyframes fadeInOut {
+		50% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+
+	@media screen and (max-width: 400px) {
+    .dashboard-header {
+      flex-direction: column;
+
+      h2 {
+        font-size: 20px;
+      }
+      .user-info-container {
+        flex-direction: column;
+        align-items: center;
+
+        .logout-button {
+          margin-top: 10px;
+          margin-right: 0;
+        }
+      }
     }
   }
 }
